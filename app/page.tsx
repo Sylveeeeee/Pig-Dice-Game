@@ -1,10 +1,12 @@
 "use client";
 
-import Dice from "./components/Dice";
+//import Dice from "./components/Dice";
 import GameSettings from "./components/GameSettings";
 import WinnerBanner from "./components/WinnerBanner";
 import { Pencil } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import Dice3D from "./components/Dice3D";
+
 
 export default function Home() {
   const [diceNumber, setDiceNumber] = useState<number | null>(null);
@@ -30,23 +32,32 @@ export default function Home() {
     setWinner(null);
   };
 
-  const rollDice = async () => {
+  const handlePlayerRoll = async () => {
+    if (gameOver || rolling || (vsBot && activePlayer === 1)) return;
 
-    setRolling(true);
-
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    const rolled = Math.floor(Math.random() * 6) + 1;
-    setDiceNumber(rolled);
+    const rolled = await rollDice();
 
     if (rolled === 1) {
       setCurrentScore(0);
-      setActivePlayer(activePlayer === 0 ? 1 : 0);
+      setActivePlayer(prev => prev === 0 ? 1 : 0);
     } else {
-      setCurrentScore(currentScore + rolled);
+      setCurrentScore(prev => prev + rolled);
     }
-    setRolling(false);
   };
+
+  const rollDice = async (): Promise<number> => {
+    setRolling(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const rolled = Math.floor(Math.random() * 6) + 1;
+    
+    setRolling(false);
+    setDiceNumber(rolled);
+    console.log('Rolled:', rolled);
+    return rolled;
+  };
+
 
   const holdScore = () => {
     const updatedScores = [...scores];
@@ -83,22 +94,21 @@ export default function Home() {
     setEditingNameIndex(null);
   };
 
-  const botPlay = useCallback(() => {
-    if (botThinking) return; // กันเรียกซ้อน
+  const botPlay = useCallback(async () => {
+    if (gameOver || rolling || botThinking) return;
 
     setBotThinking(true);
 
-    const roll = Math.floor(Math.random() * 6) + 1;
-    setDiceNumber(roll);
+    const rolled = await rollDice();
 
-    if (roll === 1) {
+    if (rolled === 1) {
       setCurrentScore(0);
       setActivePlayer(0);
       setBotThinking(false);
       return;
     }
 
-    const newScore = currentScore + roll;
+    const newScore = currentScore + rolled;
 
     const shouldHold = (() => {
       switch (botDifficulty) {
@@ -109,9 +119,7 @@ export default function Home() {
         case "hard":
           const projectedScore = scores[1] + newScore;
           const playerScore = scores[0];
-          if (projectedScore >= targetScore) return true;
-          if (projectedScore > playerScore + 10) return true;
-          return newScore >= 15;
+          return projectedScore >= targetScore || projectedScore > playerScore + 10 || newScore >= 15;
         default:
           return false;
       }
@@ -125,30 +133,31 @@ export default function Home() {
         setScores(updatedScores);
         setGameOver(true);
         setWinner(1);
-        setBotThinking(false);
-        return;
+      } else {
+        setScores(updatedScores);
+        setCurrentScore(0);
+        setActivePlayer(0);
       }
-
-      setScores(updatedScores);
-      setCurrentScore(0);
-      setActivePlayer(0);
       setBotThinking(false);
     } else {
       setCurrentScore(newScore);
+
       setTimeout(() => {
         setBotThinking(false);
       }, 1000);
     }
-  }, [botDifficulty, currentScore, scores, targetScore, botThinking]);
+  }, [botDifficulty, currentScore, scores, targetScore, gameOver, rolling, botThinking]);
+
 
   useEffect(() => {
-    if (vsBot && activePlayer === 1 && !gameOver && !botThinking) {
+    if (vsBot && activePlayer === 1 && !gameOver && !rolling && !botThinking) {
+      console.log('DiceNumber updated:', diceNumber);
       const timer = setTimeout(() => {
         botPlay();
       }, 800);
       return () => clearTimeout(timer);
     }
-  }, [activePlayer, vsBot, gameOver, botPlay, botThinking]);
+  }, [activePlayer, vsBot, gameOver, rolling, botThinking, diceNumber, botPlay]);
 
 
   return (
@@ -220,9 +229,9 @@ export default function Home() {
         {/* CONTROLS */}
         <div className="flex flex-col justify-between items-center h-[500px] absolute ">
           <button onClick={resetGame} className="rounded-full px-6 p-3 mt-10 bg-[#f87171] hover:bg-[#fca5a5] text-white font-semibold shadow-md transition ">NEW GAME</button>
-          <Dice number={diceNumber} rolling={rolling} />
+          <Dice3D number={diceNumber} rolling={rolling} />
           <div className="flex flex-col pb-15 space-y-3">
-            <button onClick={rollDice} disabled={gameOver} className={`rounded-full px-6 py-3 bg-[#31fd42] hover:bg-[#28a745] text-white font-semibold shadow-md transition duration-200 ${gameOver ? "opacity-50 cursor-not-allowed" : ""
+            <button onClick={handlePlayerRoll} disabled={gameOver || rolling || (vsBot && activePlayer === 1)} className={`rounded-full px-6 py-3 bg-[#31fd42] hover:bg-[#28a745] text-white font-semibold shadow-md transition duration-200 ${gameOver ? "opacity-50 cursor-not-allowed" : ""
               }`}>ROLL DICE</button>
             <button onClick={holdScore} disabled={gameOver} className={`rounded-full px-6 py-3 bg-[#ffcb5b] hover:bg-[#eab308] text-white font-semibold shadow-md transition duration-200 ${gameOver ? "opacity-50 cursor-not-allowed" : ""
               }`}>HOLD</button>
