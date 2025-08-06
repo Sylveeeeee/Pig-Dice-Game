@@ -1,20 +1,25 @@
 "use client";
 
 import Dice from "./components/Dice";
+import GameSettings from "./components/GameSettings";
 import WinnerBanner from "./components/WinnerBanner";
-
-
-import { useState } from "react";
+import { Pencil } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Home() {
   const [diceNumber, setDiceNumber] = useState<number | null>(null);
   const [rolling, setRolling] = useState(false);
   const [scores, setScores] = useState([0, 0]);
+  const [targetScore, setTargetScore] = useState(100);
   const [currentScore, setCurrentScore] = useState(0);
   const [activePlayer, setActivePlayer] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState<number | null>(null);
-  const playerNames = ["PLAYER 1", "PLAYER 2"];
+  const [playerNames, setPlayerNames] = useState(["PLAYER 1", "PLAYER 2"]);
+  const [editingNameIndex, setEditingNameIndex] = useState<number | null>(null);
+  const [botDifficulty, setBotDifficulty] = useState<"easy" | "medium" | "hard">("medium");
+  const [vsBot, setVsBot] = useState(false);
+  const [botThinking, setBotThinking] = useState(false);
 
   const resetGame = () => {
     setScores([0, 0]);
@@ -22,6 +27,7 @@ export default function Home() {
     setActivePlayer(0);
     setDiceNumber(null);
     setGameOver(false);
+    setWinner(null);
   };
 
   const rollDice = async () => {
@@ -46,7 +52,7 @@ export default function Home() {
     const updatedScores = [...scores];
     updatedScores[activePlayer] += currentScore;
 
-    if (updatedScores[activePlayer] >= 1) {
+    if (updatedScores[activePlayer] >= targetScore) {
       setGameOver(true);
       setWinner(activePlayer);
     }
@@ -57,9 +63,109 @@ export default function Home() {
     setActivePlayer(activePlayer === 0 ? 1 : 0);
   };
 
+  const handleNameChange = (index: number, value: string) => {
+    const updatedNames = [...playerNames];
+    updatedNames[index] = value;
+    setPlayerNames(updatedNames);
+  };
+
+  const stopEditing = () => {
+    if (editingNameIndex !== null) {
+      const trimmed = playerNames[editingNameIndex].trim();
+
+      if (!trimmed) {
+        const defaultName = `PLAYER ${editingNameIndex + 1}`;
+        const updated = [...playerNames];
+        updated[editingNameIndex] = defaultName;
+        setPlayerNames(updated);
+      }
+    }
+    setEditingNameIndex(null);
+  };
+
+  const botPlay = useCallback(() => {
+    if (botThinking) return; // กันเรียกซ้อน
+
+    setBotThinking(true);
+
+    const roll = Math.floor(Math.random() * 6) + 1;
+    setDiceNumber(roll);
+
+    if (roll === 1) {
+      setCurrentScore(0);
+      setActivePlayer(0);
+      setBotThinking(false);
+      return;
+    }
+
+    const newScore = currentScore + roll;
+
+    const shouldHold = (() => {
+      switch (botDifficulty) {
+        case "easy":
+          return Math.random() < 0.5;
+        case "medium":
+          return newScore >= 20;
+        case "hard":
+          const projectedScore = scores[1] + newScore;
+          const playerScore = scores[0];
+          if (projectedScore >= targetScore) return true;
+          if (projectedScore > playerScore + 10) return true;
+          return newScore >= 15;
+        default:
+          return false;
+      }
+    })();
+
+    if (shouldHold) {
+      const updatedScores = [...scores];
+      updatedScores[1] += newScore;
+
+      if (updatedScores[1] >= targetScore) {
+        setScores(updatedScores);
+        setGameOver(true);
+        setWinner(1);
+        setBotThinking(false);
+        return;
+      }
+
+      setScores(updatedScores);
+      setCurrentScore(0);
+      setActivePlayer(0);
+      setBotThinking(false);
+    } else {
+      setCurrentScore(newScore);
+      setTimeout(() => {
+        setBotThinking(false);
+      }, 1000);
+    }
+  }, [botDifficulty, currentScore, scores, targetScore, botThinking]);
+
+  useEffect(() => {
+    if (vsBot && activePlayer === 1 && !gameOver && !botThinking) {
+      const timer = setTimeout(() => {
+        botPlay();
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [activePlayer, vsBot, gameOver, botPlay, botThinking]);
+
+
   return (
     <div className="flex-col flex items-center justify-center h-screen">
       <h1 className="text-4xl font-bold mb-10">Roll Dice Game</h1>
+      <div className="mb-4 flex items-center gap-2">
+        <GameSettings
+          targetScore={targetScore}
+          setTargetScore={setTargetScore}
+          vsBot={vsBot}
+          setVsBot={setVsBot}
+          botDifficulty={botDifficulty}
+          setBotDifficulty={setBotDifficulty}
+          disabled={scores[0] > 0 || scores[1] > 0}
+        />
+
+      </div>
       <div className="bg-[#ffffff59] w-4xl py-2 rounded-full mb-2 text-center">
         {gameOver && winner !== null ? (
           <WinnerBanner winnerName={playerNames[winner]} />
@@ -68,7 +174,6 @@ export default function Home() {
             {`It's ${playerNames[activePlayer]}'s turn!`}
           </p>
         )}
-
       </div>
 
       <div className="flex justify-center items-center  ">
@@ -77,8 +182,35 @@ export default function Home() {
           className={`py-10 px-40 text-center rounded-l-2xl transition-all duration-300 ${activePlayer === 0 ? "bg-[#ffffff9a]" : "bg-[#ffffff59]"
             }`}
         >
-          <div className="text-3xl">PLAYER 1</div>
+          {/*  Editable Player Name */}
+          <div className="text-3xl flex items-center justify-center gap-2 mb-4">
+            {editingNameIndex === 0 ? (
+              <input
+                type="text"
+                value={playerNames[0]}
+                onChange={(e) => handleNameChange(0, e.target.value)}
+                onBlur={stopEditing}
+                maxLength={10}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") stopEditing();
+                }}
+                className="text-3xl font-bold text-center px-2 py-1 border-b w-[200px] h-[40px] transition-all duration-150 focus:outline-none focus:ring-0 "
+              />
+            ) : (
+              <span className="font-bold text-3xl px-2 py-1 text-center  w-[200px] h-[40px]">{playerNames[0]}</span>
+            )}
+            <button
+              onClick={() => setEditingNameIndex(0)}
+              className="hover:text-gray-700 text-black"
+            >
+              <Pencil />
+            </button>
+          </div>
+
+          {/* Total Score */}
           <p className="text-5xl py-10">{scores[0]}</p>
+
+          {/* Current Score */}
           <div className="mt-30 py-6 px-10 rounded-2xl bg-[#ffffff59]">
             <div className="text-2xl">Current</div>
             <p className="text-3xl mt-5">{activePlayer === 0 ? currentScore : 0}</p>
@@ -102,7 +234,29 @@ export default function Home() {
           className={`py-10 px-40 text-center rounded-r-2xl transition-all duration-300 ${activePlayer === 1 ? "bg-[#ffffff9a]" : "bg-[#ffffff59]"
             }`}
         >
-          <div className="text-3xl">PLAYER 2</div>
+          {/*  Editable Player Name */}
+          <div className="text-3xl flex items-center justify-center gap-2 mb-4">
+            {editingNameIndex === 1 ? (
+              <input
+                type="text"
+                value={playerNames[1]}
+                onChange={(e) => handleNameChange(1, e.target.value)}
+                onBlur={stopEditing}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") stopEditing();
+                }}
+                className="text-3xl font-bold text-center px-2 py-1 border-b w-[200px] h-[40px] focus:outline-none focus:ring-0 "
+              />
+            ) : (
+              <span className="font-bold text-3xl px-2 py-1 text-center  w-[200px] h-[40px]">{playerNames[1]}</span>
+            )}
+            <button
+              onClick={() => setEditingNameIndex(1)}
+              className="hover:text-gray-700 text-black"
+            >
+              <Pencil />
+            </button>
+          </div>
           <p className="text-5xl py-10">{scores[1]}</p>
           <div className="mt-30 py-6 px-10 rounded-2xl bg-[#ffffff59]">
             <div className="text-2xl">Current</div>
