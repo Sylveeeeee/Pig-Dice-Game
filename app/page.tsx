@@ -3,10 +3,11 @@
 //import Dice from "./components/Dice";
 import GameSettings from "./components/GameSettings";
 import WinnerBanner from "./components/WinnerBanner";
-import { Pencil } from "lucide-react";
+import { Pencil, History } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import Dice3D from "./components/Dice3D";
-
+import { saveGameToServer } from "@/utils/api";
+import GamesHistory from "./components/GamesHistory";
 
 export default function Home() {
   const [diceNumber, setDiceNumber] = useState<number | null>(null);
@@ -24,7 +25,24 @@ export default function Home() {
   const [botThinking, setBotThinking] = useState(false);
   const [scoreCurrentAnimated, setScoreCurrentAnimated] = useState(false);
   const [scoreAnimated, setScoreAnimated] = useState([false, false]);
+  const [rollsOf1, setRollsOf1] = useState([0, 0]);
+  const [startTime, setStartTime] = useState<Date>(new Date());
+  const [showHistory, setShowHistory] = useState(false);
 
+  const handleGameEnd = async (finalScores: number[]) => {
+    const now = new Date();
+
+    await saveGameToServer({
+      player1Name: playerNames[0],
+      player2Name: playerNames[1],
+      player1Score: finalScores[0],
+      player2Score: finalScores[1],
+      rollsOf1P1: rollsOf1[0],
+      rollsOf1P2: rollsOf1[1],
+      startTime: startTime.toISOString(),
+      endTime: now.toISOString(),
+    });
+  };
 
   const resetGame = () => {
     setScores([0, 0]);
@@ -33,6 +51,7 @@ export default function Home() {
     setDiceNumber(null);
     setGameOver(false);
     setWinner(null);
+    setStartTime(new Date());
   };
 
   const handlePlayerRoll = async () => {
@@ -41,6 +60,11 @@ export default function Home() {
     const rolled = await rollDice();
 
     if (rolled === 1) {
+      setRollsOf1((prev) => {
+        const updated = [...prev];
+        updated[activePlayer]++;
+        return updated;
+      });
       setCurrentScore(0);
       setActivePlayer(prev => prev === 0 ? 1 : 0);
     } else {
@@ -74,26 +98,30 @@ export default function Home() {
     const addedScore = currentScore;
     updatedScores[activePlayer] += currentScore;
 
-    if (updatedScores[activePlayer] >= targetScore) {
+    const winnerReached = updatedScores[activePlayer] >= targetScore;
+
+    if (winnerReached) {
       setGameOver(true);
       setWinner(activePlayer);
+
+      handleGameEnd(updatedScores);
     }
 
     if (addedScore > 0) {
-    setScoreAnimated((prev) => {
-      const updated = [...prev];
-      updated[activePlayer] = true;
-      return updated;
-    });
-
-    setTimeout(() => {
       setScoreAnimated((prev) => {
         const updated = [...prev];
-        updated[activePlayer] = false;
+        updated[activePlayer] = true;
         return updated;
       });
-    }, 600);
-  }
+
+      setTimeout(() => {
+        setScoreAnimated((prev) => {
+          const updated = [...prev];
+          updated[activePlayer] = false;
+          return updated;
+        });
+      }, 600);
+    }
     setScores(updatedScores);
     setDiceNumber(null);
     setCurrentScore(0);
@@ -187,8 +215,6 @@ export default function Home() {
     }
   }, [activePlayer, vsBot, gameOver, rolling, botThinking, diceNumber, botPlay]);
 
-
-
   return (
     <div className="flex-col flex items-center justify-center h-screen">
       <h1 className="text-4xl font-bold mb-10">Roll Dice Game</h1>
@@ -202,7 +228,11 @@ export default function Home() {
           setBotDifficulty={setBotDifficulty}
           disabled={scores[0] > 0 || scores[1] > 0}
         />
-
+        <button className="bg-[#ffffff59] flex p-2.5 shadow rounded-xl gap-2 hover:bg-[#ffffff79]" onClick={() => setShowHistory(true)}><History />History</button>
+        <GamesHistory
+          isOpen={showHistory}
+          onClose={() => setShowHistory(false)}
+        />
       </div>
       <div className="bg-[#ffffff59] w-4xl py-2 rounded-full mb-2 text-center">
         {gameOver && winner !== null ? (
