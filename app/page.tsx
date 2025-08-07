@@ -22,6 +22,9 @@ export default function Home() {
   const [botDifficulty, setBotDifficulty] = useState<"easy" | "medium" | "hard">("medium");
   const [vsBot, setVsBot] = useState(false);
   const [botThinking, setBotThinking] = useState(false);
+  const [scoreCurrentAnimated, setScoreCurrentAnimated] = useState(false);
+  const [scoreAnimated, setScoreAnimated] = useState([false, false]);
+
 
   const resetGame = () => {
     setScores([0, 0]);
@@ -41,7 +44,13 @@ export default function Home() {
       setCurrentScore(0);
       setActivePlayer(prev => prev === 0 ? 1 : 0);
     } else {
-      setCurrentScore(prev => prev + rolled);
+      setCurrentScore(prev => {
+        const newScore = prev + rolled;
+        setScoreCurrentAnimated(true);
+        setTimeout(() => setScoreCurrentAnimated(false), 600);
+
+        return newScore;
+      });
     }
   };
 
@@ -51,16 +60,18 @@ export default function Home() {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const rolled = Math.floor(Math.random() * 6) + 1;
-    
-    setRolling(false);
     setDiceNumber(rolled);
-    console.log('Rolled:', rolled);
+    console.log("Rolled:", rolled);
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setRolling(false);
     return rolled;
   };
 
-
   const holdScore = () => {
     const updatedScores = [...scores];
+    const addedScore = currentScore;
     updatedScores[activePlayer] += currentScore;
 
     if (updatedScores[activePlayer] >= targetScore) {
@@ -68,6 +79,21 @@ export default function Home() {
       setWinner(activePlayer);
     }
 
+    if (addedScore > 0) {
+    setScoreAnimated((prev) => {
+      const updated = [...prev];
+      updated[activePlayer] = true;
+      return updated;
+    });
+
+    setTimeout(() => {
+      setScoreAnimated((prev) => {
+        const updated = [...prev];
+        updated[activePlayer] = false;
+        return updated;
+      });
+    }, 600);
+  }
     setScores(updatedScores);
     setDiceNumber(null);
     setCurrentScore(0);
@@ -141,6 +167,8 @@ export default function Home() {
       setBotThinking(false);
     } else {
       setCurrentScore(newScore);
+      setScoreCurrentAnimated(true);
+      setTimeout(() => setScoreCurrentAnimated(false), 600);
 
       setTimeout(() => {
         setBotThinking(false);
@@ -158,6 +186,7 @@ export default function Home() {
       return () => clearTimeout(timer);
     }
   }, [activePlayer, vsBot, gameOver, rolling, botThinking, diceNumber, botPlay]);
+
 
 
   return (
@@ -217,23 +246,25 @@ export default function Home() {
           </div>
 
           {/* Total Score */}
-          <p className="text-5xl py-10">{scores[0]}</p>
-
+          <p className={`text-5xl py-10 transition-transform duration-500 ${scoreAnimated[0] ? "scale-125 text-green-500" : ""
+            }`}>{scores[0]}</p>
           {/* Current Score */}
           <div className="mt-30 py-6 px-10 rounded-2xl bg-[#ffffff59]">
             <div className="text-2xl">Current</div>
-            <p className="text-3xl mt-5">{activePlayer === 0 ? currentScore : 0}</p>
+            <p className={`text-4xl mt-5 font-bold transition-transform duration-500 ${activePlayer === 0 && scoreCurrentAnimated ? "scale-125 text-green-500" : ""
+              }`}>{activePlayer === 0 ? currentScore : 0}</p>
           </div>
         </div>
 
         {/* CONTROLS */}
         <div className="flex flex-col justify-between items-center h-[500px] absolute ">
-          <button onClick={resetGame} className="rounded-full px-6 p-3 mt-10 bg-[#f87171] hover:bg-[#fca5a5] text-white font-semibold shadow-md transition ">NEW GAME</button>
+          <button onClick={resetGame} className={`rounded-full px-6 p-3 mt-10 bg-[#f87171] hover:bg-[#fca5a5] text-white font-semibold shadow-md transition ${gameOver ? "animate-pulse " : ""
+            }`}>NEW GAME</button>
           <Dice3D number={diceNumber} rolling={rolling} />
           <div className="flex flex-col pb-15 space-y-3">
-            <button onClick={handlePlayerRoll} disabled={gameOver || rolling || (vsBot && activePlayer === 1)} className={`rounded-full px-6 py-3 bg-[#31fd42] hover:bg-[#28a745] text-white font-semibold shadow-md transition duration-200 ${gameOver ? "opacity-50 cursor-not-allowed" : ""
+            <button onClick={handlePlayerRoll} disabled={gameOver || rolling || (vsBot && activePlayer === 1)} className={`rounded-full px-6 py-3 bg-[#31fd42] hover:bg-[#28a745] text-white font-semibold shadow-md transition duration-200 ${gameOver || rolling || (vsBot && activePlayer === 1) ? "opacity-50 cursor-not-allowed" : ""
               }`}>ROLL DICE</button>
-            <button onClick={holdScore} disabled={gameOver} className={`rounded-full px-6 py-3 bg-[#ffcb5b] hover:bg-[#eab308] text-white font-semibold shadow-md transition duration-200 ${gameOver ? "opacity-50 cursor-not-allowed" : ""
+            <button onClick={holdScore} disabled={gameOver || rolling || (vsBot && activePlayer === 1)} className={`rounded-full px-6 py-3 bg-[#ffcb5b] hover:bg-[#eab308] text-white font-semibold shadow-md transition duration-200 ${gameOver || rolling || (vsBot && activePlayer === 1) ? "opacity-50 cursor-not-allowed" : ""
               }`}>HOLD</button>
           </div>
         </div>
@@ -266,10 +297,12 @@ export default function Home() {
               <Pencil />
             </button>
           </div>
-          <p className="text-5xl py-10">{scores[1]}</p>
+          <p className={`text-5xl py-10 transition-transform duration-500 ${scoreAnimated[1] ? "scale-125 text-green-500" : ""
+            }`}>{scores[1]}</p>
           <div className="mt-30 py-6 px-10 rounded-2xl bg-[#ffffff59]">
             <div className="text-2xl">Current</div>
-            <p className="text-3xl mt-5">{activePlayer === 1 ? currentScore : 0}</p>
+            <p className={`text-4xl mt-5 font-bold transition-transform duration-500 ${activePlayer === 1 && scoreCurrentAnimated ? "scale-125 text-green-500" : ""
+              }`}>{activePlayer === 1 ? currentScore : 0}</p>
           </div>
         </div>
       </div>

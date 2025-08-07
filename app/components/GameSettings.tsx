@@ -32,7 +32,7 @@ export default function GameSettings({
           disabled={disabled}
           className="px-3 py-1 border rounded text-sm focus:outline-none focus:ring-0"
         >
-          {[50, 100, 150, 200].map((val) => (
+          {[1,50, 100, 150, 200].map((val) => (
             <option key={val} value={val}>
               {val}
             </option>

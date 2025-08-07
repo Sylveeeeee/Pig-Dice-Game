@@ -34,6 +34,3 @@ body {
   }
 }
 
-.dice-rolling {
-  animation: dice-spin 1s linear infinite;
-}
