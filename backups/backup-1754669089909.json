@@ -1,0 +1,628 @@
+{
+  "createdAt": "2025-08-08T16:04:49.909Z",
+  "players": [
+    {
+      "id": 1,
+      "name": "PLAYER 1",
+      "createdAt": "2025-08-07T17:50:57.602Z",
+      "statistics": {
+        "playerId": 1,
+        "totalGames": 8,
+        "wins": 5,
+        "losses": 3,
+        "winPercentage": 0.625,
+        "avgScorePerGame": 5.75,
+        "maxScore": 30,
+        "avgGameDuration": 93.335125,
+        "totalRollsOf1": 0
+      }
+    },
+    {
+      "id": 2,
+      "name": "PLAYER 2",
+      "createdAt": "2025-08-07T17:50:59.257Z",
+      "statistics": {
+        "playerId": 2,
+        "totalGames": 8,
+        "wins": 0,
+        "losses": 8,
+        "winPercentage": 0,
+        "avgScorePerGame": 0,
+        "maxScore": 0,
+        "avgGameDuration": 93.335125,
+        "totalRollsOf1": 0
+      }
+    },
+    {
+      "id": 9999,
+      "name": "เด็กดี",
+      "createdAt": "2025-08-08T14:43:33.106Z",
+      "statistics": {
+        "playerId": 9999,
+        "totalGames": 555,
+        "wins": 450,
+        "losses": 105,
+        "winPercentage": 45,
+        "avgScorePerGame": 150,
+        "maxScore": 199,
+        "avgGameDuration": 12.465,
+        "totalRollsOf1": 99
+      }
+    },
+    {
+      "id": 30001,
+      "name": "jjf",
+      "createdAt": "2025-08-07T18:44:00.495Z",
+      "statistics": null
+    },
+    {
+      "id": 30002,
+      "name": "sdf",
+      "createdAt": "2025-08-07T18:44:01.913Z",
+      "statistics": null
+    },
+    {
+      "id": 30003,
+      "name": "jjfs",
+      "createdAt": "2025-08-07T18:45:12.523Z",
+      "statistics": null
+    },
+    {
+      "id": 60001,
+      "name": "dfff",
+      "createdAt": "2025-08-08T10:28:28.902Z",
+      "statistics": {
+        "playerId": 60001,
+        "totalGames": 0,
+        "wins": 0,
+        "losses": 0,
+        "winPercentage": 0,
+        "avgScorePerGame": 0,
+        "maxScore": 0,
+        "avgGameDuration": 0,
+        "totalRollsOf1": 0
+      }
+    },
+    {
+      "id": 60002,
+      "name": "dfdfdf",
+      "createdAt": "2025-08-08T10:28:30.686Z",
+      "statistics": {
+        "playerId": 60002,
+        "totalGames": 0,
+        "wins": 0,
+        "losses": 0,
+        "winPercentage": 0,
+        "avgScorePerGame": 0,
+        "maxScore": 0,
+        "avgGameDuration": 0,
+        "totalRollsOf1": 0
+      }
+    }
+  ],
+  "games": [
+    {
+      "id": 1,
+      "player1Id": 1,
+      "player2Id": 2,
+      "winnerId": null,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T17:50:50.168Z",
+      "endTime": "2025-08-07T17:50:54.306Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      },
+      "player2": {
+        "id": 2,
+        "name": "PLAYER 2",
+        "createdAt": "2025-08-07T17:50:59.257Z"
+      },
+      "winner": null
+    },
+    {
+      "id": 2,
+      "player1Id": 1,
+      "player2Id": 2,
+      "winnerId": 1,
+      "player1Score": 30,
+      "player2Score": 0,
+      "startTime": "2025-08-07T17:51:35.845Z",
+      "endTime": "2025-08-07T17:52:35.802Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      },
+      "player2": {
+        "id": 2,
+        "name": "PLAYER 2",
+        "createdAt": "2025-08-07T17:50:59.257Z"
+      },
+      "winner": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      }
+    },
+    {
+      "id": 30001,
+      "player1Id": 1,
+      "player2Id": 2,
+      "winnerId": null,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T18:41:58.081Z",
+      "endTime": "2025-08-07T18:42:05.386Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      },
+      "player2": {
+        "id": 2,
+        "name": "PLAYER 2",
+        "createdAt": "2025-08-07T17:50:59.257Z"
+      },
+      "winner": null
+    },
+    {
+      "id": 30002,
+      "player1Id": 1,
+      "player2Id": 2,
+      "winnerId": null,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T18:42:54.550Z",
+      "endTime": "2025-08-07T18:43:03.541Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      },
+      "player2": {
+        "id": 2,
+        "name": "PLAYER 2",
+        "createdAt": "2025-08-07T17:50:59.257Z"
+      },
+      "winner": null
+    },
+    {
+      "id": 30003,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": null,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T18:43:47.713Z",
+      "endTime": "2025-08-07T18:44:00.462Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": null
+    },
+    {
+      "id": 30004,
+      "player1Id": 30003,
+      "player2Id": 30002,
+      "winnerId": null,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T18:45:04.818Z",
+      "endTime": "2025-08-07T18:45:12.490Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 30003,
+        "name": "jjfs",
+        "createdAt": "2025-08-07T18:45:12.523Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": null
+    },
+    {
+      "id": 30005,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": null,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T18:46:34.023Z",
+      "endTime": "2025-08-07T18:47:05.107Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": null
+    },
+    {
+      "id": 30006,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": null,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T18:51:30.652Z",
+      "endTime": "2025-08-07T18:51:34.427Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": null
+    },
+    {
+      "id": 30007,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": null,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T18:51:39.680Z",
+      "endTime": "2025-08-07T18:51:44.389Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": null
+    },
+    {
+      "id": 30008,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": null,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T18:52:15.787Z",
+      "endTime": "2025-08-07T18:52:33.974Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": null
+    },
+    {
+      "id": 30009,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": 30001,
+      "player1Score": 49,
+      "player2Score": 5,
+      "startTime": "2025-08-07T18:55:01.500Z",
+      "endTime": "2025-08-07T18:56:06.468Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 1,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      }
+    },
+    {
+      "id": 30010,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": null,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T19:01:06.361Z",
+      "endTime": "2025-08-07T19:01:11.599Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 1,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": null
+    },
+    {
+      "id": 30011,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": null,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T19:03:32.726Z",
+      "endTime": "2025-08-07T19:03:36.801Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 1,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": null
+    },
+    {
+      "id": 60001,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": 30001,
+      "player1Score": 0,
+      "player2Score": 0,
+      "startTime": "2025-08-07T19:12:57.257Z",
+      "endTime": "2025-08-07T19:13:00.818Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 1,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      }
+    },
+    {
+      "id": 90001,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": 30001,
+      "player1Score": 2,
+      "player2Score": 0,
+      "startTime": "2025-08-07T19:12:57.257Z",
+      "endTime": "2025-08-07T19:33:27.165Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 1,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      }
+    },
+    {
+      "id": 90002,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": 30002,
+      "player1Score": 5,
+      "player2Score": 52,
+      "startTime": "2025-08-07T19:12:57.257Z",
+      "endTime": "2025-08-07T19:36:16.630Z",
+      "rollsOf1P1": 3,
+      "rollsOf1P2": 2,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      }
+    },
+    {
+      "id": 120001,
+      "player1Id": 30001,
+      "player2Id": 30002,
+      "winnerId": 30001,
+      "player1Score": 6,
+      "player2Score": 0,
+      "startTime": "2025-08-07T19:41:28.873Z",
+      "endTime": "2025-08-07T19:41:33.756Z",
+      "rollsOf1P1": 4,
+      "rollsOf1P2": 2,
+      "player1": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      },
+      "player2": {
+        "id": 30002,
+        "name": "sdf",
+        "createdAt": "2025-08-07T18:44:01.913Z"
+      },
+      "winner": {
+        "id": 30001,
+        "name": "jjf",
+        "createdAt": "2025-08-07T18:44:00.495Z"
+      }
+    },
+    {
+      "id": 150001,
+      "player1Id": 1,
+      "player2Id": 2,
+      "winnerId": 1,
+      "player1Score": 3,
+      "player2Score": 0,
+      "startTime": "2025-08-08T09:36:30.096Z",
+      "endTime": "2025-08-08T09:36:35.474Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      },
+      "player2": {
+        "id": 2,
+        "name": "PLAYER 2",
+        "createdAt": "2025-08-07T17:50:59.257Z"
+      },
+      "winner": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      }
+    },
+    {
+      "id": 150002,
+      "player1Id": 1,
+      "player2Id": 2,
+      "winnerId": 1,
+      "player1Score": 6,
+      "player2Score": 0,
+      "startTime": "2025-08-08T09:36:51.536Z",
+      "endTime": "2025-08-08T09:36:57.136Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      },
+      "player2": {
+        "id": 2,
+        "name": "PLAYER 2",
+        "createdAt": "2025-08-07T17:50:59.257Z"
+      },
+      "winner": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      }
+    },
+    {
+      "id": 150003,
+      "player1Id": 1,
+      "player2Id": 2,
+      "winnerId": 1,
+      "player1Score": 5,
+      "player2Score": 0,
+      "startTime": "2025-08-08T09:37:55.919Z",
+      "endTime": "2025-08-08T09:47:52.362Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      },
+      "player2": {
+        "id": 2,
+        "name": "PLAYER 2",
+        "createdAt": "2025-08-07T17:50:59.257Z"
+      },
+      "winner": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      }
+    },
+    {
+      "id": 180001,
+      "player1Id": 1,
+      "player2Id": 2,
+      "winnerId": 1,
+      "player1Score": 2,
+      "player2Score": 0,
+      "startTime": "2025-08-08T10:26:26.832Z",
+      "endTime": "2025-08-08T10:27:25.701Z",
+      "rollsOf1P1": 0,
+      "rollsOf1P2": 0,
+      "player1": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      },
+      "player2": {
+        "id": 2,
+        "name": "PLAYER 2",
+        "createdAt": "2025-08-07T17:50:59.257Z"
+      },
+      "winner": {
+        "id": 1,
+        "name": "PLAYER 1",
+        "createdAt": "2025-08-07T17:50:57.602Z"
+      }
+    }
+  ]
+}

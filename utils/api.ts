@@ -37,7 +37,7 @@ export const fetchGameHistory = async () => {
 
 export async function fetchPlayerStatistics(playerName: string) {
   try {
-    const res = await fetch(`/api/player-stats?name=${playerName}`);
+    const res = await fetch(`/api/player/stats?name=${playerName}`);
     if (!res.ok) throw new Error("Failed to fetch statistics");
     return await res.json();
   } catch (error) {
@@ -48,7 +48,7 @@ export async function fetchPlayerStatistics(playerName: string) {
 
 export async function fetchPlayerGameHistory(playerName: string) {
   try {
-    const res = await fetch(`/api/player-games?name=${playerName}`);
+    const res = await fetch(`/api/player/games?name=${playerName}`);
     if (!res.ok) throw new Error("Failed to fetch games");
     return await res.json();
   } catch (error) {
@@ -85,4 +85,45 @@ export async function exportAllGames() {
   a.click();
 
   URL.revokeObjectURL(url);
+}
+
+export async function importFullData(file: File) {
+  const text = await file.text();
+  const data = JSON.parse(text);
+
+  const res = await fetch("/api/import", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) throw new Error("Import failed");
+  return await res.json();
+}
+
+export async function deleteGameById(gameId: number | string): Promise<void> {
+  const res = await fetch(`/api/game/delete/${gameId}`, { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json();
+    throw new Error(data.error || "Failed to delete game");
+  }
+}
+
+export async function resetAllData() {
+  const res = await fetch("/api/reset", {
+    method: "DELETE",
+  });
+
+  if (!res.ok) {
+    const { error } = await res.json();
+    throw new Error(error || "รีเซตข้อมูลไม่สำเร็จ");
+  }
+
+  return res.json();
+}
+
+export async function backupNow() {
+  const res = await fetch("/api/backup");
+  if (!res.ok) throw new Error("Backup failed");
+  return await res.json();
 }

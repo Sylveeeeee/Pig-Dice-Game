@@ -3,11 +3,11 @@
 //import Dice from "./components/Dice";
 import GameSettings from "./components/GameSettings";
 import WinnerBanner from "./components/WinnerBanner";
-import { Pencil, History } from "lucide-react";
+import { Pencil, Menu } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import Dice3D from "./components/Dice3D";
 import { saveGameToServer } from "@/utils/api";
-import GamesHistory from "./components/GamesHistory";
+import MenuModal from "./components/MenuModal";
 
 export default function Home() {
   const [diceNumber, setDiceNumber] = useState<number | null>(null);
@@ -29,9 +29,10 @@ export default function Home() {
   const [scoreAnimated, setScoreAnimated] = useState([false, false]);
   const [rollsOf1, setRollsOf1] = useState([0, 0]);
   const [startTime, setStartTime] = useState<Date>(new Date());
-  const [showHistory, setShowHistory] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
-  const handleGameEnd = async (finalScores: number[]) => {
+  const handleGameEnd = useCallback(
+  async (finalScores: number[]) => {
     const now = new Date();
 
     await saveGameToServer({
@@ -44,7 +45,9 @@ export default function Home() {
       startTime: startTime.toISOString(),
       endTime: now.toISOString(),
     });
-  };
+  },
+  [playerNames, rollsOf1, startTime]
+);
 
   const resetGame = () => {
     setScores([0, 0]);
@@ -193,6 +196,7 @@ export default function Home() {
         setScores(updatedScores);
         setGameOver(true);
         setWinner(1);
+        await handleGameEnd(updatedScores);
       } else {
         setScores(updatedScores);
         setCurrentScore(0);
@@ -216,6 +220,7 @@ export default function Home() {
     gameOver,
     rolling,
     botThinking,
+    handleGameEnd
   ]);
 
   useEffect(() => {
@@ -248,18 +253,21 @@ export default function Home() {
           botDifficulty={botDifficulty}
           setBotDifficulty={setBotDifficulty}
           disabled={scores[0] > 0 || scores[1] > 0}
+          onBotNameChange={(name) => {
+            setPlayerNames((prev) => {
+              const updated = [...prev];
+              updated[1] = name;
+              return updated;
+            });
+          }}
         />
         <button
-          className="bg-[#ffffff59] flex p-2.5 shadow rounded-xl gap-2 hover:bg-[#ffffff79]"
-          onClick={() => setShowHistory(true)}
+          onClick={() => setShowMenu(true)}
+          className="bg-[#ffffff59] flex items-center p-2.5 shadow rounded-xl gap-2 hover:bg-[#ffffff79]"
         >
-          <History />
-          History
+          <Menu />
         </button>
-        <GamesHistory
-          isOpen={showHistory}
-          onClose={() => setShowHistory(false)}
-        />
+        <MenuModal isOpen={showMenu} onClose={() => setShowMenu(false)} />
       </div>
       <div className="bg-[#ffffff59] w-4xl py-2 rounded-full mb-2 text-center">
         {gameOver && winner !== null ? (
@@ -373,7 +381,7 @@ export default function Home() {
         >
           {/*  Editable Player Name */}
           <div className="text-3xl flex items-center justify-center gap-2 mb-4">
-            {editingNameIndex === 1 ? (
+            {editingNameIndex === 1 && !vsBot ? (
               <input
                 type="text"
                 value={playerNames[1]}

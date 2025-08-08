@@ -10,6 +10,7 @@ type GameSettingsProps = {
   botDifficulty: "easy" | "medium" | "hard";
   setBotDifficulty: (level: "easy" | "medium" | "hard") => void;
   disabled: boolean;
+  onBotNameChange: (name: string) => void;
 };
 
 export default function GameSettings({
@@ -20,6 +21,7 @@ export default function GameSettings({
   botDifficulty,
   setBotDifficulty,
   disabled,
+  onBotNameChange
 }: GameSettingsProps) {
   return (
     <div className="px-3 p-2 bg-[#ffffff59] rounded-xl shadow flex flex-col sm:flex-row items-center gap-4">
@@ -45,7 +47,19 @@ export default function GameSettings({
         <label className="font-medium text-gray-700">👥 Game Mode:</label>
         <select
           value={vsBot ? "bot" : "2p"}
-          onChange={(e) => setVsBot(e.target.value === "bot")}
+          onChange={(e) => {
+            const isBot = e.target.value === "bot";
+            setVsBot(isBot);
+            if (isBot) {
+              onBotNameChange(
+                `BOT (${botDifficulty
+                  .charAt(0)
+                  .toUpperCase()}${botDifficulty.slice(1)})`
+              );
+            } else {
+              onBotNameChange("PLAYER 2");
+            }
+          }}
           disabled={disabled}
           className="px-3 py-1 border rounded text-sm focus:outline-none focus:ring-0"
         >
@@ -60,9 +74,13 @@ export default function GameSettings({
           <label className="font-medium text-gray-700">🤖 Bot:</label>
           <select
             value={botDifficulty}
-            onChange={(e) =>
-              setBotDifficulty(e.target.value as "easy" | "medium" | "hard")
-            }
+            onChange={(e) => {
+              const level = e.target.value as "easy" | "medium" | "hard";
+              setBotDifficulty(level);
+              onBotNameChange(
+                `BOT (${level.charAt(0).toUpperCase()}${level.slice(1)})`
+              );
+            }}
             disabled={disabled}
             className="px-3 py-1 border rounded text-sm focus:outline-none focus:ring-0"
           >

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/utils/prisma";
-import { updatePlayerStatistics } from "@/utils/playerStatistics";
+import { updatePlayerStatistics } from "@/utils/calculatePlayerStatistics";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
     rollsOf1P2,
     startTime,
     endTime,
+    vsBot = false,
   } = body;
 
   try {
@@ -29,12 +30,24 @@ export async function POST(req: NextRequest) {
       create: { name: player2Name },
     });
 
-    const winnerId =
-      player1Score > player2Score
-        ? player1.id
-        : player2Score > player1Score
-        ? player2.id
-        : null;
+    let player2Id: number | null = null;
+
+    if (!vsBot && player2Name) {
+      const player2 = await prisma.player.upsert({
+        where: { name: player2Name },
+        update: {},
+        create: { name: player2Name },
+      });
+      player2Id = player2.id;
+    }
+
+    let winnerId = null;
+    if (player1Score !== player2Score) {
+      winnerId =
+        player1Score > player2Score
+          ? player1.id
+          : player2Id ?? null;
+    }
 
     const game = await prisma.game.create({
       data: {
@@ -47,13 +60,14 @@ export async function POST(req: NextRequest) {
         startTime: new Date(startTime),
         endTime: new Date(endTime),
         winnerId,
+        vsBot: vsBot,
       },
     });
 
-    await Promise.all([
-      updatePlayerStatistics(player1.id),
-      updatePlayerStatistics(player2.id),
-    ]);
+    await updatePlayerStatistics(player1.id);
+    if (player2Id) {
+      await updatePlayerStatistics(player2Id);  
+    }
 
     return NextResponse.json({ game }, { status: 200 });
   } catch (error) {

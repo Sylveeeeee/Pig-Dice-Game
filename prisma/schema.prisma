@@ -43,6 +43,8 @@ model Game {
 
   rollsOf1P1   Int      @default(0)
   rollsOf1P2   Int      @default(0)
+
+  vsBot          Boolean   @default(false)
 }
 
 model PlayerStatistics {

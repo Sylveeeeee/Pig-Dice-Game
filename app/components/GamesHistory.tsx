@@ -1,6 +1,6 @@
-import { fetchGameHistory, exportAllStats, exportAllGames  } from "@/utils/api";
+import { fetchGameHistory, deleteGameById } from "@/utils/api";
 import React, { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { X, Trash } from "lucide-react";
 import PlayerProfile from "./PlayerProfile";
 
 type Props = {
@@ -23,6 +23,7 @@ export default function HistoryModal({ isOpen, onClose }: Props) {
   const [selectedPlayerName, setSelectedPlayerName] = useState<string | null>(
     null
   );
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -31,7 +32,27 @@ export default function HistoryModal({ isOpen, onClose }: Props) {
       setHistory(data);
     };
     loadHistory();
-  }, [isOpen]);
+  }, [isOpen, deletingId]);
+
+  const confirmDelete = (id: string) => {
+    setDeletingId(id);
+  };
+
+  const cancelDelete = () => {
+    setDeletingId(null);
+  };
+
+  const handleDelete = async () => {
+    if (!deletingId) return;
+    try {
+      await deleteGameById(deletingId);
+      setHistory((prev) => prev.filter((g) => g.id !== deletingId));
+    } catch (err) {
+      alert("ลบไม่สำเร็จ: " + (err instanceof Error ? err.message : ""));
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -42,27 +63,15 @@ export default function HistoryModal({ isOpen, onClose }: Props) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#ffffff] shadow rounded-lg p-6 max-w-xl w-full overflow-y-auto max-h-[90vh] relative"
+        className="bg-white shadow rounded-lg p-6 max-w-xl w-full overflow-y-auto max-h-[90vh] relative"
       >
         <h2 className="text-2xl font-bold mb-4">Game History</h2>
         <button onClick={onClose} className="absolute top-4 right-6 text-xl">
           <X />
         </button>
-        <ul className="space-y-3 ">
-        <button
-          onClick={exportAllStats}
-          className="bg-gray-100 px-4 py-2 rounded hover:bg-gray-200 mr-2"
-        >
-          ดาวน์โหลดสถิติผู้เล่น (JSON)
-        </button>
-        <button
-          onClick={exportAllGames}
-          className="bg-gray-100 px-4 py-2 rounded hover:bg-gray-200"
-        >
-          ดาวน์โหลดประวัติเกมส์ (CSV)
-        </button>
+        <ul className="space-y-3">
           {history.map((game) => (
-            <li key={game.id} className="bg-gray-100 p-4 rounded">
+            <li key={game.id} className="bg-gray-100 p-4 rounded relative">
               <p>
                 <strong
                   onClick={() => setSelectedPlayerName(game.player1.name)}
@@ -85,10 +94,47 @@ export default function HistoryModal({ isOpen, onClose }: Props) {
               <p className="text-sm text-gray-500">
                 Played at: {new Date(game.endTime).toLocaleString()}
               </p>
+              <button
+                onClick={() => confirmDelete(game.id)}
+                className="absolute top-6 right-2 text-red-600 hover:text-red-800"
+              >
+                <Trash />
+              </button>
             </li>
           ))}
         </ul>
+
+        {/* Confirm Delete Modal */}
+        {deletingId && (
+          <>
+            <div
+              className="fixed inset-0 bg-opacity-50 z-40"
+              onClick={cancelDelete}
+            />
+            <div className="fixed z-50 top-1/2 left-1/2 w-80 p-6 bg-white rounded shadow-lg -translate-x-1/2 -translate-y-1/2">
+              <h2 className="text-lg font-semibold mb-4">ยืนยันการลบเกม</h2>
+              <p className="mb-4">
+                แน่ใจหรือไม่ว่าต้องการลบเกมนี้? ข้อมูลจะหายไปถาวร
+              </p>
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={cancelDelete}
+                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  ยกเลิก
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                >
+                  ลบ
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
+
       {selectedPlayerName && (
         <PlayerProfile
           playerName={selectedPlayerName}
