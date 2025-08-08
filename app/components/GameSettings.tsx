@@ -32,7 +32,7 @@ export default function GameSettings({
           disabled={disabled}
           className="px-3 py-1 border rounded text-sm focus:outline-none focus:ring-0"
         >
-          {[1,50, 100, 150, 200].map((val) => (
+          {[1, 50, 100, 150, 200].map((val) => (
             <option key={val} value={val}>
               {val}
             </option>
@@ -60,7 +60,9 @@ export default function GameSettings({
           <label className="font-medium text-gray-700">🤖 Bot:</label>
           <select
             value={botDifficulty}
-            onChange={(e) => setBotDifficulty(e.target.value as "easy" | "medium" | "hard")}
+            onChange={(e) =>
+              setBotDifficulty(e.target.value as "easy" | "medium" | "hard")
+            }
             disabled={disabled}
             className="px-3 py-1 border rounded text-sm focus:outline-none focus:ring-0"
           >

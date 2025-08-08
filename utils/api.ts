@@ -9,7 +9,7 @@ export const saveGameToServer = async (gameData: {
   endTime: string;
 }) => {
   try {
-    const res = await fetch("/api/game/record", { 
+    const res = await fetch("/api/game/record", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(gameData),
@@ -26,11 +26,63 @@ export const saveGameToServer = async (gameData: {
 
 export const fetchGameHistory = async () => {
   try {
-    const res = await fetch('/api/game/history');
-    if (!res.ok) throw new Error('Failed to fetch history');
+    const res = await fetch("/api/game/history");
+    if (!res.ok) throw new Error("Failed to fetch history");
     return await res.json();
   } catch (error) {
-    console.error('Error fetching history:', error);
+    console.error("Error fetching history:", error);
     return [];
   }
 };
+
+export async function fetchPlayerStatistics(playerName: string) {
+  try {
+    const res = await fetch(`/api/player-stats?name=${playerName}`);
+    if (!res.ok) throw new Error("Failed to fetch statistics");
+    return await res.json();
+  } catch (error) {
+    console.error("Error fetching player statistics:", error);
+    return null;
+  }
+}
+
+export async function fetchPlayerGameHistory(playerName: string) {
+  try {
+    const res = await fetch(`/api/player-games?name=${playerName}`);
+    if (!res.ok) throw new Error("Failed to fetch games");
+    return await res.json();
+  } catch (error) {
+    console.error("Error fetching player game history:", error);
+    return [];
+  }
+}
+
+export async function exportAllStats() {
+  const res = await fetch("/api/export/statics");
+  if (!res.ok) throw new Error("Failed to export statistics");
+
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "players_statistics.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+export async function exportAllGames() {
+  const res = await fetch("/api/export/games");
+  if (!res.ok) throw new Error("Failed to export games");
+
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "all_games_history.csv";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
