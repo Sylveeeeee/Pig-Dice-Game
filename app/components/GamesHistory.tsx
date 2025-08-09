@@ -88,7 +88,7 @@ export default function HistoryModal({ isOpen, onClose }: Props) {
                 </strong>{" "}
                 ({game.player2Score})
                 <div className="">
-                 Winner:{" "}
+                Winner:{" "}
                 <span className="text-green-600 font-semibold">
                   {game.winner?.name || "Draw"}
                 </span>

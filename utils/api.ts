@@ -102,13 +102,14 @@ export async function importFullData(file: File) {
 }
 
 export async function deleteGameById(gameId: number | string): Promise<void> {
-  const url = new URL(`/api/game/delete/${gameId}`, window.location.origin);
+  const url = new URL(`/api/game/delete/${gameId}`, window.location.origin);  
   const res = await fetch(url.toString(), { method: "DELETE" });
 
   if (!res.ok) {
     const data = await res.json();
     throw new Error(data.error || "Failed to delete game");
   }
+
   console.log("Game deleted successfully");
 }
 

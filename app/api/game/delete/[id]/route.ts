@@ -1,10 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/utils/prisma";
+import { NextRequest, NextResponse } from "next/server";
 import { updatePlayerStatistics } from "@/utils/calculatePlayerStatistics";
 
-export async function DELETE(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const gameId = parseInt(searchParams.get("id") || "");
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+  const gameId = parseInt(context.params.id); 
 
   if (isNaN(gameId)) {
     return NextResponse.json({ error: "Invalid game ID" }, { status: 400 });
