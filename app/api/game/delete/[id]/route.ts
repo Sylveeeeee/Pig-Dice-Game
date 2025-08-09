@@ -2,11 +2,9 @@ import { prisma } from "@/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { updatePlayerStatistics } from "@/utils/calculatePlayerStatistics";
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const gameId = parseInt(params.id);
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+  const gameId = parseInt(context.params.id);  
+
   if (isNaN(gameId)) {
     return NextResponse.json({ error: "Invalid game ID" }, { status: 400 });
   }
@@ -22,7 +20,7 @@ export async function DELETE(
     await updatePlayerStatistics(game.player1Id);
     await updatePlayerStatistics(game.player2Id);
 
-    return NextResponse.json({ message: "ลบเกมและอัปเดตสถิติเรียบร้อยแล้ว" });
+    return NextResponse.json({ message: "Game deleted and player statistics updated successfully" });
   } catch (error) {
     console.error("Error deleting game:", error);
     return NextResponse.json(

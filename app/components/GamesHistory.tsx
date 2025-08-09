@@ -63,7 +63,7 @@ export default function HistoryModal({ isOpen, onClose }: Props) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#ffffff94] shadow rounded-lg p-6 max-w-xl w-full overflow-y-auto max-h-[90vh] relative"
+        className="bg-[#ffffff94] shadow rounded-lg p-6 max-w-xl w-full overflow-y-auto max-h-[90vh] relative "
       >
         <h2 className="text-2xl font-bold mb-4">Game History</h2>
         <button onClick={onClose} className="absolute top-4 right-6 text-xl">
@@ -86,10 +86,13 @@ export default function HistoryModal({ isOpen, onClose }: Props) {
                 >
                   {game.player2.name}
                 </strong>{" "}
-                ({game.player2Score}) — Winner:{" "}
+                ({game.player2Score})
+                <div className="">
+                 Winner:{" "}
                 <span className="text-green-600 font-semibold">
                   {game.winner?.name || "Draw"}
                 </span>
+                </div>
               </p>
               <p className="text-sm text-gray-500">
                 Played at: {new Date(game.endTime).toLocaleString()}
@@ -112,22 +115,22 @@ export default function HistoryModal({ isOpen, onClose }: Props) {
               onClick={cancelDelete}
             />
             <div className="fixed z-50 top-1/2 left-1/2 w-80 p-6 bg-white rounded shadow-lg -translate-x-1/2 -translate-y-1/2">
-              <h2 className="text-lg font-semibold mb-4">ยืนยันการลบเกม</h2>
+              <h2 className="text-lg font-semibold mb-4">Confirm game deletion</h2>
               <p className="mb-4">
-                แน่ใจหรือไม่ว่าต้องการลบเกมนี้? ข้อมูลจะหายไปถาวร
+                Are you sure you want to delete this game? Your data will be permanently lost.
               </p>
               <div className="flex justify-end space-x-3">
                 <button
                   onClick={cancelDelete}
                   className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
-                  ยกเลิก
+                  cancel
                 </button>
                 <button
                   onClick={handleDelete}
                   className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                 >
-                  ลบ
+                  delete
                 </button>
               </div>
             </div>
