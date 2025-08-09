@@ -45,7 +45,7 @@ export default function PlayerProfileModal({ playerName, onClose }: Props) {
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50"
+      className="fixed inset-0 backdrop-blur-xs flex justify-center items-center z-50"
     >
       <div
         onClick={(e) => e.stopPropagation()}

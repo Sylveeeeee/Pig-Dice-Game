@@ -59,11 +59,11 @@ export default function HistoryModal({ isOpen, onClose }: Props) {
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50"
+      className="fixed inset-0 backdrop-blur-xs flex justify-center items-center z-50"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white shadow rounded-lg p-6 max-w-xl w-full overflow-y-auto max-h-[90vh] relative"
+        className="bg-[#ffffff94] shadow rounded-lg p-6 max-w-xl w-full overflow-y-auto max-h-[90vh] relative"
       >
         <h2 className="text-2xl font-bold mb-4">Game History</h2>
         <button onClick={onClose} className="absolute top-4 right-6 text-xl">
@@ -71,7 +71,7 @@ export default function HistoryModal({ isOpen, onClose }: Props) {
         </button>
         <ul className="space-y-3">
           {history.map((game) => (
-            <li key={game.id} className="bg-gray-100 p-4 rounded relative">
+            <li key={game.id} className="bg-[#ffffff59] p-4 rounded relative">
               <p>
                 <strong
                   onClick={() => setSelectedPlayerName(game.player1.name)}

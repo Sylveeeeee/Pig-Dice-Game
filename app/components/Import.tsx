@@ -15,18 +15,18 @@ export default function ImportModal({ isOpen, onClose }: ImportModalProps) {
 
   const handleFile = async (file: File) => {
     if (!file.name.endsWith(".json")) {
-      setMessage("กรุณาเลือกไฟล์ .json เท่านั้น");
+      setMessage("Is this a .json file?");
       return;
     }
 
     try {
       setLoading(true);
       const result = await importFullData(file);
-      setMessage(`✅ นำเข้าสำเร็จ: ${JSON.stringify(result.count)}`);
+      setMessage(`✅ Successfully imported: ${JSON.stringify(result.count)}`);
       setFileName(file.name);
     } catch (err) {
       console.error(err);
-      setMessage("❌ เกิดข้อผิดพลาดระหว่างนำเข้า");
+      setMessage("❌ An error occurred during import");
     } finally {
       setLoading(false);
     }
@@ -48,7 +48,10 @@ export default function ImportModal({ isOpen, onClose }: ImportModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 backdrop-blur-xs flex justify-center items-center z-50"
+    >
       <div className="bg-white p-6 rounded-md w-full max-w-md relative">
         <button
           onClick={onClose}
@@ -56,17 +59,17 @@ export default function ImportModal({ isOpen, onClose }: ImportModalProps) {
         >
           ✕
         </button>
-        <h2 className="text-xl font-semibold mb-4">นำเข้าข้อมูล (.json)</h2>
+        <h2 className="text-xl font-semibold mb-4">import data (.json)</h2>
 
         <div
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           className="border-2 border-dashed border-gray-400 p-6 rounded-md text-center hover:bg-gray-50 transition"
         >
-          <p className="mb-2">ลากไฟล์ JSON มาวางที่นี่</p>
-          <p className="text-sm text-gray-500">หรือ</p>
+          <p className="mb-2">Drag and drop the JSON file here.</p>
+          <p className="text-sm text-gray-500">or</p>
           <label className="mt-2 inline-block cursor-pointer text-blue-600 underline">
-            เลือกไฟล์จากเครื่อง
+            Select file from device
             <input
               type="file"
               accept=".json"
@@ -75,8 +78,8 @@ export default function ImportModal({ isOpen, onClose }: ImportModalProps) {
             />
           </label>
 
-          {fileName && <p className="mt-4 text-green-600">ไฟล์: {fileName}</p>}
-          {loading && <p className="text-yellow-600 mt-2">กำลังนำเข้า...</p>}
+          {fileName && <p className="mt-4 text-green-600">file: {fileName}</p>}
+          {loading && <p className="text-yellow-600 mt-2">Importing...</p>}
           {message && <p className="mt-2 text-sm">{message}</p>}
         </div>
       </div>

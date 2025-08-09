@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Target,Users,Bot   } from 'lucide-react';
 
 type GameSettingsProps = {
   targetScore: number;
@@ -24,15 +25,16 @@ export default function GameSettings({
   onBotNameChange
 }: GameSettingsProps) {
   return (
-    <div className="px-3 p-2 bg-[#ffffff59] rounded-xl shadow flex flex-col sm:flex-row items-center gap-4">
+    <div className="px-3 p-2 bg-[#ffffff59] rounded-xl shadow flex  flex-row  md:items-center gap-4">
       {/* Target Score */}
       <div className="flex items-center gap-2">
-        <label className="font-medium text-gray-700">🎯 Target Score:</label>
+        <Target  />
+        <label className="font-medium text-gray-700 md:block hidden">Target Score:</label>
         <select
           value={targetScore}
           onChange={(e) => setTargetScore(Number(e.target.value))}
           disabled={disabled}
-          className="px-3 py-1 border rounded text-sm focus:outline-none focus:ring-0"
+          className="border rounded text-sm focus:outline-none focus:ring-0 "
         >
           {[1, 50, 100, 150, 200].map((val) => (
             <option key={val} value={val}>
@@ -44,7 +46,8 @@ export default function GameSettings({
 
       {/* Game Mode */}
       <div className="flex items-center gap-2">
-        <label className="font-medium text-gray-700">👥 Game Mode:</label>
+        <Users  />
+        <label className="font-medium text-gray-700 md:block hidden"> Game Mode:</label>
         <select
           value={vsBot ? "bot" : "2p"}
           onChange={(e) => {
@@ -61,7 +64,7 @@ export default function GameSettings({
             }
           }}
           disabled={disabled}
-          className="px-3 py-1 border rounded text-sm focus:outline-none focus:ring-0"
+          className=" border rounded text-sm focus:outline-none focus:ring-0"
         >
           <option value="2p">2 Players</option>
           <option value="bot">Vs Bot</option>
@@ -71,7 +74,8 @@ export default function GameSettings({
       {/* Bot Difficulty */}
       {vsBot && (
         <div className="flex items-center gap-2">
-          <label className="font-medium text-gray-700">🤖 Bot:</label>
+          <Bot  />
+          <label className=" font-medium text-gray-700 md:block hidden">Bot:</label>
           <select
             value={botDifficulty}
             onChange={(e) => {
@@ -82,7 +86,7 @@ export default function GameSettings({
               );
             }}
             disabled={disabled}
-            className="px-3 py-1 border rounded text-sm focus:outline-none focus:ring-0"
+            className=" border rounded text-sm focus:outline-none focus:ring-0 "
           >
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>

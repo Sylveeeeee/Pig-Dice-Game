@@ -3,7 +3,7 @@
 //import Dice from "./components/Dice";
 import GameSettings from "./components/GameSettings";
 import WinnerBanner from "./components/WinnerBanner";
-import { Pencil, Menu } from "lucide-react";
+import { Pencil, Menu, RotateCcw, Shell, Hand } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import Dice3D from "./components/Dice3D";
 import { saveGameToServer } from "@/utils/api";
@@ -32,22 +32,22 @@ export default function Home() {
   const [showMenu, setShowMenu] = useState(false);
 
   const handleGameEnd = useCallback(
-  async (finalScores: number[]) => {
-    const now = new Date();
+    async (finalScores: number[]) => {
+      const now = new Date();
 
-    await saveGameToServer({
-      player1Name: playerNames[0],
-      player2Name: playerNames[1],
-      player1Score: finalScores[0],
-      player2Score: finalScores[1],
-      rollsOf1P1: rollsOf1[0],
-      rollsOf1P2: rollsOf1[1],
-      startTime: startTime.toISOString(),
-      endTime: now.toISOString(),
-    });
-  },
-  [playerNames, rollsOf1, startTime]
-);
+      await saveGameToServer({
+        player1Name: playerNames[0],
+        player2Name: playerNames[1],
+        player1Score: finalScores[0],
+        player2Score: finalScores[1],
+        rollsOf1P1: rollsOf1[0],
+        rollsOf1P2: rollsOf1[1],
+        startTime: startTime.toISOString(),
+        endTime: now.toISOString(),
+      });
+    },
+    [playerNames, rollsOf1, startTime]
+  );
 
   const resetGame = () => {
     setScores([0, 0]);
@@ -243,8 +243,8 @@ export default function Home() {
 
   return (
     <div className="flex-col flex items-center justify-center h-screen">
-      <h1 className="text-4xl font-bold mb-10">Roll Dice Game</h1>
-      <div className="mb-4 flex items-center gap-2">
+      <h1 className="hidden md:block text-4xl font-bold mb-10">Roll Dice Game</h1>
+      <div className="mb-2 flex items-center gap-2">
         <GameSettings
           targetScore={targetScore}
           setTargetScore={setTargetScore}
@@ -263,13 +263,13 @@ export default function Home() {
         />
         <button
           onClick={() => setShowMenu(true)}
-          className="bg-[#ffffff59] flex items-center p-2.5 shadow rounded-xl gap-2 hover:bg-[#ffffff79]"
+          className="hidden bg-[#ffffff59] md:flex items-center p-2.5 shadow rounded-xl gap-2 hover:bg-[#ffffff79]"
         >
           <Menu />
         </button>
         <MenuModal isOpen={showMenu} onClose={() => setShowMenu(false)} />
       </div>
-      <div className="bg-[#ffffff59] w-4xl py-2 rounded-full mb-2 text-center">
+      <div className="hidden md:block bg-[#ffffff59] lg:w-4xl md:w-3/4 py-2 rounded-full mb-2 text-center">
         {gameOver && winner !== null ? (
           <WinnerBanner winnerName={playerNames[winner]} />
         ) : (
@@ -279,15 +279,36 @@ export default function Home() {
         )}
       </div>
 
-      <div className="flex justify-center items-center  ">
+      <div className="flex flex-col-reverse md:flex-row justify-center items-center lg:w-7/8 md:w-22/23 w-full  py-2 ">
+        <div className="md:hidden flex justify-between items-center absolute px-5 z-10 w-full">
+          <button
+            onClick={resetGame}
+            className={`rounded-full px-3 py-2 lg:mt-10 md:mt-10 bg-[#f87171] hover:bg-[#fca5a5] text-white font-semibold shadow-md transition ${gameOver ? "animate-pulse " : ""
+              }`}
+          >
+            <RotateCcw />
+          </button>
+          <div className="md:hidden block   z-10">
+            <Dice3D number={diceNumber} rolling={rolling} />
+          </div>
+          <button
+            onClick={() => setShowMenu(true)}
+            className="bg-[#ffffff59] md:flex items-center p-2.5 shadow rounded-xl gap-2 hover:bg-[#ffffff79]"
+          >
+            <Menu />
+          </button>
+
+          <MenuModal isOpen={showMenu} onClose={() => setShowMenu(false)}
+          />
+        </div>
+
         {/* PLAYER 1 */}
         <div
-          className={`py-10 px-40 text-center rounded-l-2xl transition-all duration-300 ${
-            activePlayer === 0 ? "bg-[#ffffff9a]" : "bg-[#ffffff59]"
-          }`}
+          className={` md:h-[520px] h-1/2 md:w-1/2 w-[95%] md:py-10 flex-col flex justify-between items-center text-center md:rounded-l-2xl md:rounded-r-none rounded-b-2xl transition-all duration-300 ${activePlayer === 0 ? "bg-[#ffffff9a]" : "bg-[#ffffff59]"
+            }`}
         >
           {/*  Editable Player Name */}
-          <div className="text-3xl flex items-center justify-center gap-2 mb-4">
+          <div className="text-3xl flex items-center justify-center gap-2 mb-4 md:mt-0 mt-30">
             {editingNameIndex === 0 ? (
               <input
                 type="text"
@@ -298,10 +319,10 @@ export default function Home() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") stopEditing();
                 }}
-                className="text-3xl font-bold text-center px-2 py-1 border-b w-[200px] h-[40px] transition-all duration-150 focus:outline-none focus:ring-0 "
+                className="lg:text-3xl md:text-2xl text-[16px] font-bold text-center border-b w-1/2  transition-all duration-150 focus:outline-none focus:ring-0"
               />
             ) : (
-              <span className="font-bold text-3xl px-2 py-1 text-center  w-[200px] h-[40px]">
+              <span className="font-bold lg:text-3xl md:text-2xl text-[16px] text-center">
                 {playerNames[0]}
               </span>
             )}
@@ -309,78 +330,107 @@ export default function Home() {
               onClick={() => setEditingNameIndex(0)}
               className="hover:text-gray-700 text-black"
             >
-              <Pencil />
+              <Pencil size={16} />
             </button>
           </div>
 
           {/* Total Score */}
           <p
-            className={`text-5xl py-10 transition-transform duration-500 ${
-              scoreAnimated[0] ? "scale-125 text-green-500" : ""
-            }`}
+            className={`hidden md:block text-5xl lg:py-10 transition-transform duration-500 ${scoreAnimated[0] ? "scale-125 text-green-500" : ""
+              }`}
           >
             {scores[0]}
           </p>
           {/* Current Score */}
-          <div className="mt-30 py-6 px-10 rounded-2xl bg-[#ffffff59]">
-            <div className="text-2xl">Current</div>
-            <p
-              className={`text-4xl mt-5 font-bold transition-transform duration-500 ${
-                activePlayer === 0 && scoreCurrentAnimated
+          <div className="flex md:justify-center justify-between items-center w-full px-2 py-2">
+            <div className="md:py-6 py-8 lg:px-10 w-3/8 rounded-2xl bg-[#ffffff59]">
+              <div className="md:text-2xl text-[16px]">Current</div>
+              <p
+                className={`text-4xl md:mt-5  transition-transform duration-500 ${activePlayer === 0 && scoreCurrentAnimated
                   ? "scale-125 text-green-500"
                   : ""
-              }`}
-            >
-              {activePlayer === 0 ? currentScore : 0}
-            </p>
+                  }`}
+              >
+                {activePlayer === 0 ? currentScore : 0}
+              </p>
+            </div>
+            <div className="md:hidden px-2">
+              <div className="flex  flex-col lg:pb-15 md:pb-10 space-y-2 text-[16px]">
+
+                <button
+                  onClick={holdScore}
+                  disabled={gameOver || (activePlayer === 1) || rolling || (vsBot && activePlayer === 1)}
+                  className={`rounded-full p-2 bg-[#ffcb5b] hover:bg-[#eab308] text-white font-semibold shadow-md transition duration-200 ${gameOver || (activePlayer === 1) || rolling || (vsBot && activePlayer === 1)
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                    }`}
+                >
+                  <Hand size={40} />
+                </button>
+                <button
+                  onClick={handlePlayerRoll}
+                  disabled={gameOver || (activePlayer === 1) || rolling || (vsBot && activePlayer === 1)}
+                  className={`rounded-full p-2 bg-[#31fd42] hover:bg-[#28a745] text-white font-semibold shadow-md transition duration-200 ${gameOver || (activePlayer === 1) || rolling || (vsBot && activePlayer === 1)
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                    }`}
+                >
+                  <Shell size={40} />
+                </button>
+              </div>
+            </div>
+            <div className="md:hidden md:py-6 py-8 lg:px-10 w-3/8 rounded-2xl bg-[#ffffff59]">
+              <div className="md:text-2xl text-[16px]">score</div>
+              <p
+                className={`md:hidden text-4xl lg:py-10 transition-transform duration-500 ${scoreAnimated[0] ? "scale-125 text-green-500" : ""
+                  }`}
+              >
+                {scores[0]}
+              </p>
+            </div>
           </div>
         </div>
 
         {/* CONTROLS */}
-        <div className="flex flex-col justify-between items-center h-[500px] absolute ">
+        <div className="hidden md:flex flex-col justify-between items-center h-[520px] absolute ">
           <button
             onClick={resetGame}
-            className={`rounded-full px-6 p-3 mt-10 bg-[#f87171] hover:bg-[#fca5a5] text-white font-semibold shadow-md transition ${
-              gameOver ? "animate-pulse " : ""
-            }`}
+            className={`rounded-full px-6 p-3 lg:mt-10 md:mt-10 bg-[#f87171] hover:bg-[#fca5a5] text-white font-semibold shadow-md transition ${gameOver ? "animate-pulse " : ""
+              }`}
           >
             NEW GAME
           </button>
           <Dice3D number={diceNumber} rolling={rolling} />
-          <div className="flex flex-col pb-15 space-y-3">
+          <div className="flex  flex-col lg:pb-15 md:pb-10 space-y-3">
             <button
               onClick={handlePlayerRoll}
               disabled={gameOver || rolling || (vsBot && activePlayer === 1)}
-              className={`rounded-full px-6 py-3 bg-[#31fd42] hover:bg-[#28a745] text-white font-semibold shadow-md transition duration-200 ${
-                gameOver || rolling || (vsBot && activePlayer === 1)
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
+              className={`rounded-full px-6 py-3 bg-[#31fd42] hover:bg-[#28a745] text-white font-semibold shadow-md transition duration-200 ${gameOver || rolling || (vsBot && activePlayer === 1)
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+                }`}
             >
               ROLL DICE
             </button>
             <button
               onClick={holdScore}
               disabled={gameOver || rolling || (vsBot && activePlayer === 1)}
-              className={`rounded-full px-6 py-3 bg-[#ffcb5b] hover:bg-[#eab308] text-white font-semibold shadow-md transition duration-200 ${
-                gameOver || rolling || (vsBot && activePlayer === 1)
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
+              className={`rounded-full px-6 py-3 bg-[#ffcb5b] hover:bg-[#eab308] text-white font-semibold shadow-md transition duration-200 ${gameOver || rolling || (vsBot && activePlayer === 1)
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+                }`}
             >
               HOLD
             </button>
           </div>
         </div>
-
         {/* PLAYER 2 */}
         <div
-          className={`py-10 px-40 text-center rounded-r-2xl transition-all duration-300 ${
-            activePlayer === 1 ? "bg-[#ffffff9a]" : "bg-[#ffffff59]"
-          }`}
+          className={` rotate-180 md:rotate-none h-1/2 md:h-[520px] md:w-1/2 w-[95%] md:py-10 flex-col flex justify-between items-center text-center md:rounded-r-2xl md:rounded-l-none rounded-b-2xl transition-all duration-300 ${activePlayer === 1 ? "bg-[#ffffff9a]" : "bg-[#ffffff59]"
+            }`}
         >
           {/*  Editable Player Name */}
-          <div className="text-3xl flex items-center justify-center gap-2 mb-4">
+          <div className="text-3xl flex items-center justify-center gap-2 mb-4 md:mt-0 mt-30">
             {editingNameIndex === 1 && !vsBot ? (
               <input
                 type="text"
@@ -390,10 +440,10 @@ export default function Home() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") stopEditing();
                 }}
-                className="text-3xl font-bold text-center px-2 py-1 border-b w-[200px] h-[40px] focus:outline-none focus:ring-0 "
+                className="lg:text-3xl md:text-2xl text-[16px] font-bold text-center border-b w-1/2  transition-all duration-150 focus:outline-none focus:ring-0 "
               />
             ) : (
-              <span className="font-bold text-3xl px-2 py-1 text-center  w-[200px] h-[40px]">
+              <span className="font-bold lg:text-3xl md:text-2xl text-[16px] text-center">
                 {playerNames[1]}
               </span>
             )}
@@ -401,27 +451,61 @@ export default function Home() {
               onClick={() => setEditingNameIndex(1)}
               className="hover:text-gray-700 text-black"
             >
-              <Pencil />
+              <Pencil size={16} />
             </button>
           </div>
           <p
-            className={`text-5xl py-10 transition-transform duration-500 ${
-              scoreAnimated[1] ? "scale-125 text-green-500" : ""
-            }`}
+            className={`hidden md:block text-5xl lg:py-10 transition-transform duration-500 ${scoreAnimated[1] ? "scale-125 text-green-500" : ""
+              }`}
           >
             {scores[1]}
           </p>
-          <div className="mt-30 py-6 px-10 rounded-2xl bg-[#ffffff59]">
-            <div className="text-2xl">Current</div>
-            <p
-              className={`text-4xl mt-5 font-bold transition-transform duration-500 ${
-                activePlayer === 1 && scoreCurrentAnimated
+          {/* Current Score */}
+          <div className="flex md:justify-center justify-between items-center w-full px-2 py-2 ">
+            <div className="md:py-6 py-8 lg:px-10 w-3/8 rounded-2xl bg-[#ffffff59]">
+              <div className="md:text-2xl text-[16px]">Current</div>
+              <p
+                className={`text-4xl md:mt-5  transition-transform duration-500 ${activePlayer === 1 && scoreCurrentAnimated
                   ? "scale-125 text-green-500"
                   : ""
-              }`}
-            >
-              {activePlayer === 1 ? currentScore : 0}
-            </p>
+                  }`}
+              >
+                {activePlayer === 1 ? currentScore : 0}
+              </p>
+            </div>
+            <div className="md:hidden px-2 ">
+              <div className="flex  flex-col lg:pb-15 md:pb-10 space-y-2 text-[16px]">
+                <button
+                  onClick={holdScore}
+                  disabled={gameOver || (activePlayer === 0) || rolling || (vsBot && activePlayer === 1)}
+                  className={`rounded-full p-2 bg-[#ffcb5b] hover:bg-[#eab308] text-white font-semibold shadow-md transition duration-200 ${gameOver || (activePlayer === 0) || rolling || (vsBot && activePlayer === 1)
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                    }`}
+                >
+                  <Hand size={40} />
+                </button>
+                <button
+                  onClick={handlePlayerRoll}
+                  disabled={gameOver || (activePlayer === 0) || rolling || (vsBot && activePlayer === 1)}
+                  className={`rounded-full p-2 bg-[#31fd42] hover:bg-[#28a745] text-white font-semibold shadow-md transition duration-200 ${gameOver || (activePlayer === 0) || rolling || (vsBot && activePlayer === 1)
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                    }`}
+                >
+                  <Shell size={40} />
+                </button>
+              </div>
+            </div>
+            <div className="md:hidden md:py-6 py-8 lg:px-10 w-3/8 rounded-2xl bg-[#ffffff59]">
+              <div className="md:text-2xl text-[16px]">score</div>
+              <p
+                className={`md:hidden text-4xl lg:py-10 transition-transform duration-500 ${scoreAnimated[1] ? "scale-125 text-green-500" : ""
+                  }`}
+              >
+                {scores[1]}
+              </p>
+            </div>
           </div>
         </div>
       </div>

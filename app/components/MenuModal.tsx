@@ -14,17 +14,39 @@ type Props = {
 export default function MenuModal({ isOpen, onClose }: Props) {
   const [showHistory, setShowHistory] = useState(false);
   const [showImport, setShowImport] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+
+  const handleResetAllData = async () => {
+    const confirmReset = confirm(
+      "⚠️Are you sure you want to reset all data? All data will be lost!"
+    );
+    if (!confirmReset) return;
+
+    try {
+      setStatus("Backing up data...");
+      await backupNow();
+
+      setStatus("Resetting data...");
+      const result = await resetAllData();
+
+      setStatus(`✅ ${result.message}`);
+    } catch (error) {
+      const errMsg = error instanceof Error ? error.message : "unknown cause";
+      setStatus(`❌ An error occurred.: ${errMsg}`);
+    }
+  };
 
   if (!isOpen) return null;
 
   return (
     <div
       onClick={onClose}
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className="fixed bg-[#0000009f] backdrop-blur-xs inset-0 bg-opacity-50 flex items-center justify-center z-50"
     >
+      
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative space-y-4"
+        className="bg-[#ffffff94] rounded-lg shadow-lg p-6 w-full max-w-md relative space-y-4"
       >
         <button
           onClick={onClose}
@@ -33,14 +55,14 @@ export default function MenuModal({ isOpen, onClose }: Props) {
           <X />
         </button>
 
-        <h2 className="text-xl font-bold mb-4">เมนูจัดการข้อมูล</h2>
+        <h2 className="text-xl font-bold mb-4">management menu</h2>
 
         {/* History */}
         <button
           className="bg-[#ffffff59] flex items-center p-2.5 shadow rounded-xl gap-2 hover:bg-[#ffffff79] w-full"
           onClick={() => setShowHistory(true)}
         >
-          <History /> ประวัติการเล่น
+          <History /> Playing history
         </button>
         <GamesHistory isOpen={showHistory} onClose={() => setShowHistory(false)} />
 
@@ -49,7 +71,7 @@ export default function MenuModal({ isOpen, onClose }: Props) {
           onClick={exportAllStats}
           className="bg-[#ffffff59] flex items-center p-2.5 shadow rounded-xl gap-2 hover:bg-[#ffffff79] w-full"
         >
-          <FileUp /> ส่งออกสถิติ (JSON)
+          <FileUp /> Export statistics (JSON)
         </button>
 
         {/* Export CSV */}
@@ -57,7 +79,7 @@ export default function MenuModal({ isOpen, onClose }: Props) {
           onClick={exportAllGames}
           className="bg-[#ffffff59] flex items-center p-2.5 shadow rounded-xl gap-2 hover:bg-[#ffffff79] w-full"
         >
-          <Download /> ส่งออกประวัติ (CSV)
+          <Download /> Export history (CSV)
         </button>
 
         {/* Import */}
@@ -65,7 +87,7 @@ export default function MenuModal({ isOpen, onClose }: Props) {
           onClick={() => setShowImport(true)}
           className="bg-[#ffffff59] flex items-center p-2.5 shadow rounded-xl gap-2 hover:bg-[#ffffff79] w-full"
         >
-          <FileDown /> นำเข้าข้อมูล
+          <FileDown /> import data
         </button>
         <Import isOpen={showImport} onClose={() => setShowImport(false)} />
 
@@ -73,33 +95,33 @@ export default function MenuModal({ isOpen, onClose }: Props) {
         <button
           onClick={async () => {
             const result = await backupNow();
-            alert("✅ สำรองข้อมูลสำเร็จ: " + result.file);
+            alert("✅ Successful backup: " + result.file);
           }}
-          className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700"
+          className="bg-[#37d63f] text-white px-4 py-2 rounded w-full hover:bg-[#2ebf32] "
         >
-          สำรองข้อมูลตอนนี้
+          Back up now
         </button>
 
         {/* Reset all */}
         <button
-          onClick={async () => {
-            const confirmReset = confirm(
-              "⚠️ คุณแน่ใจหรือไม่ว่าต้องการรีเซตข้อมูลทั้งหมด? ข้อมูลจะหายทั้งหมด!"
-            );
-            if (!confirmReset) return;
-
-            try {
-              await backupNow();
-              const result = await resetAllData();
-              alert(result.message);
-            } catch (err: unknown) {
-              alert("เกิดข้อผิดพลาด: " + (err as Error).message);
-            }
-          }}
-          className="bg-red-600 text-white px-4 py-2 rounded w-full hover:bg-red-700"
+          onClick={handleResetAllData}
+          className="bg-[#ff4444] text-white px-4 py-2 rounded w-full hover:bg-[#b12e2e] transition-colors"
         >
-          รีเซตข้อมูลทั้งหมด
+          Reset all data
         </button>
+
+        {status && (
+          <p
+            className={`mt-2 text-sm ${status.startsWith("✅")
+                ? "text-green-600"
+                : status.startsWith("❌")
+                  ? "text-red-600"
+                  : "text-gray-600"
+              }`}
+          >
+            {status}
+          </p>
+        )}
       </div>
     </div>
   );
