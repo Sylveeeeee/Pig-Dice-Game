@@ -90,7 +90,6 @@ export default function Home() {
 
     const rolled = Math.floor(Math.random() * 6) + 1;
     setDiceNumber(rolled);
-    console.log("Rolled:", rolled);
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -304,9 +303,10 @@ export default function Home() {
 
         {/* PLAYER 1 */}
         <div
-          className={` md:h-[520px] h-1/2 md:w-1/2 w-[95%] md:py-10 flex-col flex justify-between items-center text-center md:rounded-l-2xl md:rounded-r-none rounded-b-2xl transition-all duration-300 ${activePlayer === 0 ? "bg-[#ffffff9a]" : "bg-[#ffffff59]"
+          className={` md:h-[520px] h-1/2 md:w-1/2 w-[95%] md:py-10 flex-col flex justify-between items-center text-center md:rounded-l-2xl md:rounded-r-none rounded-b-2xl transition-all duration-300 ${activePlayer === 0 ? "bg-[#ffffff9a]" : "bg-[#ffffff59] "
             }`}
         >
+
           {/*  Editable Player Name */}
           <div className="text-3xl flex items-center justify-center gap-2 mb-4 md:mt-0 mt-30">
             {editingNameIndex === 0 ? (
