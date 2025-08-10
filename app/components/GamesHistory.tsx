@@ -87,12 +87,12 @@ export default function HistoryModal({ isOpen, onClose }: Props) {
                   {game.player2.name}
                 </strong>{" "}
                 ({game.player2Score})
-                <div className="">
-                Winner:{" "}
-                <span className="text-green-600 font-semibold">
-                  {game.winner?.name || "Draw"}
-                </span>
-                </div>
+                
+                  Winner:{" "}
+                  <span className="text-green-600 font-semibold">
+                    {game.winner?.name || "Draw"}
+                  </span>
+                
               </p>
               <p className="text-sm text-gray-500">
                 Played at: {new Date(game.endTime).toLocaleString()}
